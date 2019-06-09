@@ -8,5 +8,5 @@
         https://github.com/mxsm/schema/mxsm/mxsm.xsd">
 
     <mxsm:application name="test" />
-
+    <bean id="aaaa" class="java.lang.String"/>
 </beans>
