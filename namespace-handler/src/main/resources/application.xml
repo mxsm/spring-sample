@@ -2,11 +2,21 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mxsm="https://github.com/mxsm/schema/mxsm"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd
         https://github.com/mxsm/schema/mxsm
-        https://github.com/mxsm/schema/mxsm/mxsm.xsd">
+        https://github.com/mxsm/schema/mxsm/mxsm.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="application.properties"/>
+
 
     <mxsm:application name="test" />
     <bean id="aaaa" class="java.lang.String"/>
+
+    <bean id="applicationBean" class="com.github.mxsm.bean.ApplicationBean"/>
+
+    <bean id="beanPostProcessor" class="com.github.mxsm.process.MxsmBeanPostProcessor"/>
 </beans>
