@@ -10,6 +10,7 @@
     <modules>
         <module>namespace-handler</module>
         <module>spring-boot</module>
+        <module>spring-beanPostProcessor</module>
     </modules>
     <packaging>pom</packaging>
 

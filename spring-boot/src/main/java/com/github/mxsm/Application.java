@@ -6,13 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-//@SpringBootApplication
+@SpringBootApplication
 public class Application {
 
     public static void main(String[] args) {
-       // SpringApplication.run(Application.class,args);
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext("com.github.mxsm");
+        SpringApplication.run(Application.class,args);
+        //ApplicationContext applicationContext = new AnnotationConfigApplicationContext("com.github.mxsm");
 
-        System.out.println(applicationContext.getBean(MxsmPostProcessor.class));
+        //System.out.println(applicationContext.getBean(MxsmPostProcessor.class));
     }
 }

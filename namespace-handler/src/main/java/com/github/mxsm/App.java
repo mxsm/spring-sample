@@ -12,6 +12,6 @@ public class App {
     public static void main( String[] args ) {
         ApplicationContext context = new ClassPathXmlApplicationContext("application.xml");
         //System.out.println(context.getBean("aaaa",String.class));
-        context.getBean(MxsmBeanPostProcessor.class);
+        context.getBean("applicationBean");
     }
 }

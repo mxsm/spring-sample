@@ -13,10 +13,13 @@
     <context:property-placeholder location="application.properties"/>
 
 
-    <mxsm:application name="test" />
-    <bean id="aaaa" class="java.lang.String"/>
+   <!-- <mxsm:application name="test" />-->
+   <!-- <bean id="aaaa" class="java.lang.String"/>-->
 
-    <bean id="applicationBean" class="com.github.mxsm.bean.ApplicationBean"/>
+    <bean id="applicationBean" class="com.github.mxsm.bean.ApplicationBean" init-method="init"/>
+    <!--<bean id="user" class="com.github.mxsm.bean.User" init-method="start">
+        <property name="name" value="aaaa"></property>
+    </bean>-->
 
-    <bean id="beanPostProcessor" class="com.github.mxsm.process.MxsmBeanPostProcessor"/>
+    <bean id="beanPostProcessor" class="com.github.mxsm.process.MxsmPostProcessor2"/>
 </beans>

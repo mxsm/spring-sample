@@ -11,6 +11,10 @@ public class ApplicationBean implements EnvironmentAware {
 
     private Environment environment;
 
+    public void init(){
+        System.out.println("init");
+    }
+
     @Override
     public void setEnvironment(Environment environment) {
         this.environment = environment;
