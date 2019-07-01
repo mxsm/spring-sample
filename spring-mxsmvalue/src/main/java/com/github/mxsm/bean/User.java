@@ -5,19 +5,14 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author mxsm
- * @Date 2019/6/27 23:42
+ * @Date 2019/7/1 0:40
  * description:
  */
 @Component
-public class TestBean {
+public class User {
 
-    @MxsmValue("test")
+    @MxsmValue("${test}")
     private String name;
-
-    public void init(){
-        System.out.println("TestBean---init()");
-        this.name = "test";
-    }
 
     public String getName() {
         return name;

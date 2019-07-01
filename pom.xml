@@ -11,6 +11,7 @@
         <module>namespace-handler</module>
         <module>spring-boot</module>
         <module>spring-beanPostProcessor</module>
+        <module>spring-mxsmvalue</module>
     </modules>
     <packaging>pom</packaging>
 
