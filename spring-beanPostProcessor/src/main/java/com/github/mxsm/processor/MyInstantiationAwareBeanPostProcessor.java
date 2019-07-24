@@ -43,8 +43,16 @@ public class MyInstantiationAwareBeanPostProcessor implements InstantiationAware
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
 
         System.out.println(" before Instantiation " + beanName);
+        Object target = null;
+        try {
+            target = beanClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
-        return null;
+        return target;
     }
 
     /**

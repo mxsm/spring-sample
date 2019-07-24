@@ -12,4 +12,6 @@
     <!--<bean class="com.github.mxsm.processor.MyBeanPostProcessor" id="myBeanPostProcessor"/>-->
     <bean class="com.github.mxsm.processor.MyInstantiationAwareBeanPostProcessor" id="myInstantiationAwareBeanPostProcessor"/>
 
+    <bean class="com.github.mxsm.processor.MyBeanFactoryPostProcessor" id="myBeanFactoryPostProcessor"/>
+
 </beans>
