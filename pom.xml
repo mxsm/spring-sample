@@ -12,6 +12,7 @@
         <module>spring-boot</module>
         <module>spring-beanPostProcessor</module>
         <module>spring-mxsmvalue</module>
+        <module>mxsm-nacos</module>
     </modules>
     <packaging>pom</packaging>
 

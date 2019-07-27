@@ -14,4 +14,6 @@
 
     <bean class="com.github.mxsm.processor.MyBeanFactoryPostProcessor" id="myBeanFactoryPostProcessor"/>
 
+    <bean class="com.github.mxsm.processor.MxsmValueBeanPostProcessor" id="mxsmValueBeanPostProcessor"/>
+
 </beans>
