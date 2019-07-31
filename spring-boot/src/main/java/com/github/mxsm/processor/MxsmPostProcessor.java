@@ -5,7 +5,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Component
+//@Component
 public class MxsmPostProcessor implements BeanPostProcessor {
 
     @Override

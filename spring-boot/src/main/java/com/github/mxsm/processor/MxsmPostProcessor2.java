@@ -6,7 +6,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class MxsmPostProcessor2 implements InstantiationAwareBeanPostProcessor {
 
     @Override
