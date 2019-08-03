@@ -1,7 +1,6 @@
 package com.github.mxsm.nacos.beanfactoryprocessor;
 
 import com.alibaba.nacos.api.NacosFactory;
-import com.alibaba.nacos.api.PropertyKeyConst;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.github.mxsm.nacos.annotation.EnableNacosConfig;
@@ -14,15 +13,11 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.SingletonBeanRegistry;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotationMetadata;
 
@@ -115,20 +110,18 @@ public class NacosBeanDefinitionRegistrar implements ImportBeanDefinitionRegistr
                 clientProperties.put("serverAddr",resolvedNacosServerAddress);
                 clientProperties.put("namespace",resolvedNamespace);
                 nacosConfigService = NacosFactory.createConfigService(clientProperties);
-                System.out.println(nacosConfigService.getConfig("mxsm","nacos",3000)+"--------878787------");
+                SingletonBeanRegistry singletonBeanRegistry = null;
+                if(registry instanceof  SingletonBeanRegistry){
+                    singletonBeanRegistry = (SingletonBeanRegistry)registry;
+                }
+                singletonBeanRegistry.registerSingleton("nacosConfigService",nacosConfigService);
+
             } catch (NacosException e) {
                logger.error("Create nacos ConfigService Error",e);
             }
         }
-
-        SingletonBeanRegistry singletonBeanRegistry = null;
-        if(registry instanceof  SingletonBeanRegistry){
-            singletonBeanRegistry = (SingletonBeanRegistry)registry;
-        }
-        singletonBeanRegistry.registerSingleton("nacosConfigService",nacosConfigService);
-
         RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(NacosValueBeanPostProcessor.class);
-        rootBeanDefinition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+        rootBeanDefinition.setRole(BeanDefinition.ROLE_APPLICATION);
         registry.registerBeanDefinition(NacosValueBeanPostProcessor.class.getName(),rootBeanDefinition);
     }
 

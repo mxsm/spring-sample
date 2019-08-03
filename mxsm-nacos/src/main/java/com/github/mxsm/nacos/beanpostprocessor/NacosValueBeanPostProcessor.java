@@ -1,18 +1,22 @@
 package com.github.mxsm.nacos.beanpostprocessor;
 
 import com.alibaba.nacos.api.config.ConfigService;
-import com.github.mxsm.nacos.BeanTest;
+import com.alibaba.nacos.api.config.listener.Listener;
 import com.github.mxsm.nacos.annotation.NacosValue;
+import com.github.mxsm.nacos.pub.NacosValueChangeEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
-import org.springframework.beans.TypeConverter;
 import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.annotation.InjectionMetadata;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
 import org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
@@ -28,13 +32,17 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
 
 /**
  * @author mxsm
  * @Date 2019/7/27 23:54
  * description:
  */
-public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProcessorAdapter implements MergedBeanDefinitionPostProcessor, EnvironmentAware, BeanFactoryAware {
+public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProcessorAdapter implements MergedBeanDefinitionPostProcessor,
+        EnvironmentAware, BeanFactoryAware, ApplicationListener<NacosValueChangeEvent>, ApplicationEventPublisherAware {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Set<Class<? extends Annotation>> autowiredAnnotationTypes = new LinkedHashSet<>(4);
 
@@ -43,6 +51,10 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
     private final Map<String, InjectionMetadata> injectionMetadataCache = new ConcurrentHashMap<>(256);
 
     private Environment environment;
+
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    private Map<String,Field> fieldMap = new HashMap<>();
 
     public NacosValueBeanPostProcessor() {
         autowiredAnnotationTypes.add(NacosValue.class);
@@ -70,8 +82,6 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
 
     @Override
     public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) throws BeansException {
-
-
 
         InjectionMetadata metadata = findNacosValueMetadata(beanName, bean.getClass(), pvs);
         try {
@@ -181,6 +191,43 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
 
     }
 
+    /**
+     * Handle an application event.
+     *
+     * @param event the event to respond to
+     */
+    @Override
+    public void onApplicationEvent(NacosValueChangeEvent event) {
+        String key = event.getKey();
+        String content = event.getContent();
+        if(logger.isInfoEnabled()){
+            logger.info("refresh Value:key={},value={}",key,content);
+        }
+        Field field = fieldMap.get(key);
+        if(field == null){
+            return;
+        }
+        ReflectionUtils.makeAccessible(field);
+        try {
+            field.set(event.getSource(),content);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Set the ApplicationEventPublisher that this object runs in.
+     * <p>Invoked after population of normal bean properties but before an init
+     * callback like InitializingBean's afterPropertiesSet or a custom init-method.
+     * Invoked before ApplicationContextAware's setApplicationContext.
+     *
+     * @param applicationEventPublisher event publisher to be used by this object
+     */
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
     private class NacosValueFieldElement extends InjectionMetadata.InjectedElement {
 
         public NacosValueFieldElement(Field field) {
@@ -194,28 +241,33 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
             if (checkPropertySkipping(pvs)) {
                 return;
             }
-
+            final String key = bean.getClass().getName()+"#"+field.getName();
+            fieldMap.put(key,field);
             NacosValue nacosValue = field.getAnnotation(NacosValue.class);
             String resolveDataId = environment.resolvePlaceholders(nacosValue.dataId());
             String resolveGroup = environment.resolvePlaceholders(nacosValue.group());
 
             ConfigService configService = beanFactory.getBean("nacosConfigService", ConfigService.class);
 
-/*            DependencyDescriptor desc = new DependencyDescriptor(field, true);
-            desc.setContainingClass(bean.getClass());
-            Set<String> autowiredBeanNames = new LinkedHashSet<>(1);
-            Assert.state(beanFactory != null, "No BeanFactory available");
-            TypeConverter typeConverter = beanFactory.getTypeConverter();
-            try {
-                Object value = beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter);
-                System.out.println("----------" + value);
-            }
-            catch (BeansException ex) {
-                throw new UnsatisfiedDependencyException(null, beanName, new InjectionPoint(field), ex);
-            }*/
-
             ReflectionUtils.makeAccessible(field);
             field.set(bean,configService.getConfig(resolveDataId,resolveGroup,3000));
+
+            if(nacosValue.refresh()){
+                configService.addListener(resolveDataId, resolveGroup, new Listener() {
+                    @Override
+                    public Executor getExecutor() {
+                        return null;
+                    }
+
+                    @Override
+                    public void receiveConfigInfo(String configInfo) {
+                        if(logger.isInfoEnabled()){
+                            logger.info("Nacos Server refresh value: {}",configInfo );
+                        }
+                        applicationEventPublisher.publishEvent(new NacosValueChangeEvent(bean,configInfo,key));
+                    }
+                });
+            }
 
 
         }

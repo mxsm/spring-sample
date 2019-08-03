@@ -16,6 +16,9 @@ public @interface NacosValue {
 
     boolean required() default false;
 
+    //值是否需要刷新
+    boolean refresh() default false;
+
     //值的类型
     NacosValueType valueType() default NacosValueType.TEXT;
 
