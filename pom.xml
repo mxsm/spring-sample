@@ -14,6 +14,7 @@
         <module>spring-mxsmvalue</module>
         <module>mxsm-nacos</module>
         <module>mxsm-cglib</module>
+        <module>mxsm-algorithm</module>
     </modules>
     <packaging>pom</packaging>
 
