@@ -23,8 +23,6 @@ public class Palindrome {
             if (rev > Integer.MAX_VALUE/10 || (rev == Integer.MAX_VALUE / 10 && pop > 7)) return false;
             rev = rev * 10 + pop;
         }
-
-
         return rev == x?true:false;
     }
 
