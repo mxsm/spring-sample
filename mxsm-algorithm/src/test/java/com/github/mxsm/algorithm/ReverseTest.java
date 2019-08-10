@@ -23,4 +23,11 @@ public class ReverseTest {
         String arryas = Arrays.asList(result).stream().map(item->item.toString()).collect(Collectors.joining(",","[","]"));
         System.out.println(arryas);
     }
+
+    @Test
+    public void atoi() {
+
+        int result = new Atoi().atoi("-91283472332");
+        assertEquals(-2147483648,result);
+    }
 }
