@@ -1,5 +1,6 @@
 package com.github.mxsm;
 
+import com.github.mxsm.annotation.MxsmComponentScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * description:
  */
 @SpringBootApplication
+@MxsmComponentScan(basePackages = "com.github.mxsm")
 public class SpringMxsmValueApplication {
 
     public static void main(String[] args) {
