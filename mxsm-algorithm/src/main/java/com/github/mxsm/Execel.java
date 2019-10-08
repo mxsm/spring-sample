@@ -1,17 +1,13 @@
 package com.github.mxsm;
 
-import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 /**
  * @author mxsm
@@ -20,79 +16,74 @@ import java.util.UUID;
  */
 public class Execel {
 
-    private static final String SQL_APPLY = "INSERT INTO bio_isolation_apply(\"id\", \"process_instance_id\", \"approve_process_instance_id\", \"task_instance_id\", \"user_id\", \"user_name\", \"approve_user_id\", \"approve_user_name\", \"company_id\", \"company_name\", \"org_id\", \"org_name\", \"position\", \"user_type_code\", \"user_type_name\", \"destination_id\", \"destination_name\", \"isolation_start_time\", \"start_point_id\", \"start_point_name\", \"approve_status\", \"remark\", \"create_user\", \"create_time\", \"modify_user\", \"modify_time\", \"tenant_id\", \"app_id\", \"deleted\", \"process_status\", \"approve_time\") VALUES (%s, '%s', '%s', '', 1159443286204166145, '%s', 1151888325801005057, '张芳菱', 1143681326958694401, '扬翔股份', 0, '', '教练', '0', NULL, %s, '%s', '%s', %s, '%s', 1, NULL, '1155668306427498497', '%s', '1155668306427498497', '%s', 1143681147589283841, 300, 'f', 0, '%s');\n";
-
-    private static final String SQL_ISOLATION = "INSERT INTO bio_exit_entry (\"id\", \"process_instance_id\", \"task_instance_id\", \"user_id\", \"user_name\", \"isolation_start_time\", \"isolation_end_time\", \"isolation_entry_time\", \"isolation_exit_time\", \"isolation_center_id\", \"isolation_center_name\", \"bracelet_number\", \"bracelet_status\", \"arranged\", \"step_executed\", \"create_user\", \"create_time\", \"modify_user\", \"modify_time\", \"tenant_id\", \"deleted\", \"app_id\", \"process_status\") VALUES (%s, '%s', NULL, 1144435606304399361, '%s', '%s', '%s', '%s', '%s', %s, '%s', NULL, 0, 'f', 1, '1151888411578716162', '%s', '1144435606304399361', '%s', 1143681147589283841, 'f', 300, 0);\n";
-    //FileInputStream fis = new FileInputStream(new File("C:\\Users\\mxsm\\Desktop\\gggg\\期中英语同学成绩 70份.xlsx"));
     public static void main(String[] args) throws Exception{
 
-        /*String sql = String.format(SQL_APPLY,"2253226415698583553","b69aeb78-ac5e-test-aa69-fae42ad0a1d1",
-                "1a58c890-ac5e-test-aa69-fae42ad0a1d1","罗金兰","1158346492387852290","团结二场,团结二场生产区","2019-06-22 16:51:00",
-                "1151884220298936322","总部隔离1区,总部隔离1区隔离楼","2019-06-22 16:52:58","2019-06-22 16:57:19","2019-06-22 16:52:58");*/
 
-       /* String  sql = String.format(SQL_ISOLATION,"2255679350072868865","9af7e0f9-b1af-test-abb4-da29186e4b24","陆映仙","2019-06-29 11:20:03","2019-06-29 11:21:03","2019-06-29 11:20:03","2019-06-29 11:21:03",
-                "1151884220298936322","总部隔离1区隔离楼","2019-06-29 11:20:03","2019-06-29 11:21:00");*/
-       // System.out.println(sql);
-        FileInputStream fis = new FileInputStream(new File("C:\\Users\\mxsm\\Desktop\\2019年5-8月份总部隔离中心隔离人员信息汇总表(2).xlsx"));
+        FileInputStream fis = new FileInputStream(new File("C:\\Users\\mxsm\\Desktop\\gggg\\少儿医保学校缴费人员名单 高中 3573人.xlsx"));
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
-        XSSFSheet sheet = workbook.getSheetAt(1);
+        XSSFSheet sheet = workbook.getSheetAt(0);
         int size = sheet.getLastRowNum();
 
-        int[] hour = new int[]{9,10,11,14};
+        FileInputStream fis1 = new FileInputStream(new File("C:\\Users\\mxsm\\Desktop\\gggg\\高三（21）班 学生信息统计表.xlsx"));
+        XSSFWorkbook workbook1 = new XSSFWorkbook(fis1);
+        XSSFSheet sheet1 = workbook1.getSheetAt(0);
+        int size1 = sheet1.getLastRowNum();
 
-       String[] sqlApply = new String[size];
-       String[] sqlIsolation = new String[size];
-       Map<String,String> key = new HashMap<>(size);
-        Map<String,String> keyStart = new HashMap<>(size);
+        for(int i = 3; i < 51;++i){
+            Row row = sheet1.getRow(i);
+            String name = row.getCell(1).getStringCellValue();
+            for(int j = 1; j < size; ++j){
+                Row row1 = sheet.getRow(j);
+                String name1 = row1.getCell(0).getStringCellValue();
+                if(StringUtils.equals(StringUtils.trim(name),StringUtils.trim(name1))){
+                    //证件号码
+                    row.createCell(2).setCellValue(row1.getCell(3).getStringCellValue());
+                    //所在年级
+                    row.createCell(3).setCellValue(row1.getCell(6)==null?"":row1.getCell(6).getStringCellValue());
+                    //所在班
+                    row.createCell(4).setCellValue(row1.getCell(7)==null?"":row1.getCell(7).getStringCellValue());
+                    //监护人1姓名
+                    row.createCell(5).setCellValue(row1.getCell(8)==null?"":row1.getCell(8).getStringCellValue());
+                    //监护人1证件号码
+                    row.createCell(6).setCellValue(row1.getCell(9)==null?"":row1.getCell(9).getStringCellValue());
+                    //监护人1手机号码
+                    row.createCell(7).setCellValue(row1.getCell(10)==null?"":row1.getCell(10).getStringCellValue());
+                    //监护人2姓名
+                    row.createCell(8).setCellValue(row1.getCell(11)==null?"":row1.getCell(11).getStringCellValue());
+                    //监护人2证件号码
+                    row.createCell(9).setCellValue(row1.getCell(12)==null?"":row1.getCell(12).getStringCellValue());
+                    //监护人2手机号码
+                    row.createCell(10).setCellValue(row1.getCell(13)==null?"":row1.getCell(13).getStringCellValue());
+                    break;
+                }
+            }
 
-        for(int i = 1; i <= size; ++i) {
-            String processIntanceId = "test_"+UUID.randomUUID().toString();
-            String id = i+"";
+        }
+
+        workbook1.write(new FileOutputStream(new File("C:\\Users\\mxsm\\Desktop\\gggg\\高三21班学生信息统计表.xlsx")));
+
+
+        /*for(int i = 2; i <= size; ++i) {
             Row row = sheet.getRow(i);
-            String userName = row.getCell(1).getStringCellValue();
-            String startPointName = row.getCell(3).getStringCellValue();
-            if(StringUtils.isEmpty(keyStart.get(startPointName))){
-                keyStart.put(startPointName,""+i);
-            }
-            String startPointId = keyStart.get("startPointName");
-            String destinationName = row.getCell(4).getStringCellValue();
-            if(StringUtils.isEmpty(key.get(destinationName))){
-                key.put(destinationName,""+i);
-            }
-            String destinationId = key.get(destinationName);
-            String time = DateFormatUtils.format(row.getCell(6).getDateCellValue(),"yyyy-MM-dd "+ hour[((int)Math.random()*4)] +":30:00");
+            String stName = row.getCell(1).getStringCellValue();
+            for(int j = 2; j <= size1; ++j) {
+                Row row1 = sheet1.getRow(j);
+                String stName1 = row1.getCell(2).getStringCellValue();
+                if(StringUtils.equals(stName1, stName)) {
 
-            String sqlApplyItem =  String.format(SQL_APPLY,i,processIntanceId,
-                    processIntanceId,userName,destinationId,destinationName,time,
-                    startPointId,startPointName,time,time,time);
-
-            String sqlIsItem = String.format(SQL_ISOLATION,i,processIntanceId,userName,time,time,time,time,
-                    startPointId,startPointName,time,time);
-
-            sqlApply[i-1] = sqlApplyItem;
-            sqlIsolation[i-1] = sqlIsItem;
-            System.out.println(i);
-        }
-        File file = new File("C:\\Users\\mxsm\\Desktop\\人员数据.sql");
-
-        FileWriter fw=new FileWriter(file);
-        //写入中文字符时会出现乱码
-        BufferedWriter  bw = new BufferedWriter(fw);
-        //BufferedWriter  bw=new BufferedWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("E:/phsftp/evdokey/evdokey_201103221556.txt")), "UTF-8")));
-
-        for(String arr:sqlApply){
-            if(!StringUtils.isEmpty(arr)){
-                bw.write(arr);
+                    row.createCell(22).setCellValue(-(row.getCell(2).getNumericCellValue()-row1.getCell(3).getNumericCellValue()));
+                    row.createCell(23).setCellValue(-(row.getCell(5).getNumericCellValue()-row1.getCell(4).getNumericCellValue()));
+                    row.createCell(24).setCellValue(-(row.getCell(8).getNumericCellValue()-row1.getCell(5).getNumericCellValue()));
+                    row.createCell(25).setCellValue(-(row.getCell(10).getNumericCellValue()-row1.getCell(6).getNumericCellValue()));
+                    row.createCell(26).setCellValue(-(row.getCell(13).getNumericCellValue()-row1.getCell(7).getNumericCellValue()));
+                    row.createCell(27).setCellValue(-(row.getCell(16).getNumericCellValue()-row1.getCell(8).getNumericCellValue()));
+                    row.createCell(28).setCellValue(-(row.getCell(19).getNumericCellValue()-row1.getCell(11).getNumericCellValue()));
+                    row.createCell(29).setCellValue(-(row.getCell(20).getNumericCellValue()-row1.getCell(13).getNumericCellValue()));
+                    row.createCell(30).setCellValue(-(row.getCell(21).getNumericCellValue()-row1.getCell(12).getNumericCellValue()));
+                    break;
+                }
             }
         }
-        bw.write("\n\n");
-        for(String arr:sqlIsolation){
-            if(!StringUtils.isEmpty(arr)){
-                bw.write(arr);
-            }
-        }
-        bw.close();
-        fw.close();
-
+        workbook.write(new FileOutputStream(new File("C:\\Users\\mxsm\\Desktop\\gggg\\入学日语同学成绩 70份1.xlsx")));*/
     }
 }
