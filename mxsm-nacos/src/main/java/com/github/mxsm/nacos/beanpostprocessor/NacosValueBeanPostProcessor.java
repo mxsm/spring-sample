@@ -36,11 +36,11 @@ import java.util.concurrent.Executor;
 
 /**
  * @author mxsm
- * @Date 2019/7/27 23:54
- * description:
+ * @Date 2019/7/27 23:54 description:
  */
-public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProcessorAdapter implements MergedBeanDefinitionPostProcessor,
-        EnvironmentAware, BeanFactoryAware, ApplicationListener<NacosValueChangeEvent>, ApplicationEventPublisherAware {
+public class NacosValueBeanPostProcessor extends InstantiationAwareBeanPostProcessorAdapter implements
+    MergedBeanDefinitionPostProcessor,
+    EnvironmentAware, BeanFactoryAware, ApplicationListener<NacosValueChangeEvent>, ApplicationEventPublisherAware {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -54,7 +54,7 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
 
     private ApplicationEventPublisher applicationEventPublisher;
 
-    private Map<String,Field> fieldMap = new HashMap<>();
+    private Map<String, Field> fieldMap = new HashMap<>();
 
     public NacosValueBeanPostProcessor() {
         autowiredAnnotationTypes.add(NacosValue.class);
@@ -63,34 +63,33 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
     /**
      * Callback that supplies the owning factory to a bean instance.
      * <p>Invoked after the population of normal bean properties
-     * but before an initialization callback such as
-     * {@link InitializingBean#afterPropertiesSet()} or a custom init-method.
+     * but before an initialization callback such as {@link InitializingBean#afterPropertiesSet()} or a custom
+     * init-method.
      *
-     * @param beanFactory owning BeanFactory (never {@code null}).
-     *                    The bean can immediately call methods on the factory.
+     * @param beanFactory owning BeanFactory (never {@code null}). The bean can immediately call methods on the
+     *                    factory.
      * @throws BeansException in case of initialization errors
      * @see BeanInitializationException
      */
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         Assert.isInstanceOf(ConfigurableListableBeanFactory.class, beanFactory,
-                "AnnotationInjectedBeanPostProcessor requires a ConfigurableListableBeanFactory");
+            "AnnotationInjectedBeanPostProcessor requires a ConfigurableListableBeanFactory");
         this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
 
     }
 
 
     @Override
-    public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) throws BeansException {
+    public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName)
+        throws BeansException {
 
         InjectionMetadata metadata = findNacosValueMetadata(beanName, bean.getClass(), pvs);
         try {
             metadata.inject(bean, beanName, pvs);
-        }
-        catch (BeanCreationException ex) {
+        } catch (BeanCreationException ex) {
             throw ex;
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
             throw new BeanCreationException(beanName, "Injection of autowired dependencies failed", ex);
         }
         return pvs;
@@ -178,8 +177,8 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
     }
 
     /**
-     * A notification that the bean definition for the specified name has been reset,
-     * and that this post-processor should clear any metadata for the affected bean.
+     * A notification that the bean definition for the specified name has been reset, and that this post-processor
+     * should clear any metadata for the affected bean.
      * <p>The default implementation is empty.
      *
      * @param beanName the name of the bean
@@ -200,16 +199,16 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
     public void onApplicationEvent(NacosValueChangeEvent event) {
         String key = event.getKey();
         String content = event.getContent();
-        if(logger.isInfoEnabled()){
-            logger.info("refresh Value:key={},value={}",key,content);
+        if (logger.isInfoEnabled()) {
+            logger.info("refresh Value:key={},value={}", key, content);
         }
         Field field = fieldMap.get(key);
-        if(field == null){
+        if (field == null) {
             return;
         }
         ReflectionUtils.makeAccessible(field);
         try {
-            field.set(event.getSource(),content);
+            field.set(event.getSource(), content);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -218,8 +217,8 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
     /**
      * Set the ApplicationEventPublisher that this object runs in.
      * <p>Invoked after population of normal bean properties but before an init
-     * callback like InitializingBean's afterPropertiesSet or a custom init-method.
-     * Invoked before ApplicationContextAware's setApplicationContext.
+     * callback like InitializingBean's afterPropertiesSet or a custom init-method. Invoked before
+     * ApplicationContextAware's setApplicationContext.
      *
      * @param applicationEventPublisher event publisher to be used by this object
      */
@@ -236,13 +235,13 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
 
         @Override
         protected void inject(Object bean, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
-            Field field = (Field)this.member;
+            Field field = (Field) this.member;
 
             if (checkPropertySkipping(pvs)) {
                 return;
             }
-            final String key = bean.getClass().getName()+"#"+field.getName();
-            fieldMap.put(key,field);
+            final String key = bean.getClass().getName() + "#" + field.getName();
+            fieldMap.put(key, field);
             NacosValue nacosValue = field.getAnnotation(NacosValue.class);
             String resolveDataId = environment.resolvePlaceholders(nacosValue.dataId());
             String resolveGroup = environment.resolvePlaceholders(nacosValue.group());
@@ -250,9 +249,9 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
             ConfigService configService = beanFactory.getBean("nacosConfigService", ConfigService.class);
 
             ReflectionUtils.makeAccessible(field);
-            field.set(bean,configService.getConfig(resolveDataId,resolveGroup,3000));
+            field.set(bean, configService.getConfig(resolveDataId, resolveGroup, 3000));
 
-            if(nacosValue.refresh()){
+            if (nacosValue.refresh()) {
                 configService.addListener(resolveDataId, resolveGroup, new Listener() {
                     @Override
                     public Executor getExecutor() {
@@ -261,10 +260,11 @@ public class NacosValueBeanPostProcessor  extends InstantiationAwareBeanPostProc
 
                     @Override
                     public void receiveConfigInfo(String configInfo) {
-                        if(logger.isInfoEnabled()){
-                            logger.info("Nacos Server refresh value: {}",configInfo );
+                        if (logger.isInfoEnabled()) {
+                            logger.info("Nacos Server refresh: dataId={} group={}, newValue={}", resolveDataId,
+                                resolveGroup, configInfo);
                         }
-                        applicationEventPublisher.publishEvent(new NacosValueChangeEvent(bean,configInfo,key));
+                        applicationEventPublisher.publishEvent(new NacosValueChangeEvent(bean, configInfo, key));
                     }
                 });
             }

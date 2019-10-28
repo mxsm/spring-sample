@@ -90,6 +90,18 @@ public class NacosBeanDefinitionRegistrar implements ImportBeanDefinitionRegistr
             }
             throw new IllegalArgumentException("globalProperties is null");
         }
+
+        //创建ConfigService
+        createConfigService(properties,registry);
+
+        RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(NacosValueBeanPostProcessor.class);
+        rootBeanDefinition.setRole(BeanDefinition.ROLE_APPLICATION);
+        registry.registerBeanDefinition(NacosValueBeanPostProcessor.class.getName(),rootBeanDefinition);
+    }
+
+
+    private void createConfigService(AnnotationAttributes properties,BeanDefinitionRegistry registry){
+
         //获取nacos server配置
         String nacosServerAddress = properties.getString("serverAddr");
         String namespace = properties.getString("namespace");
@@ -99,10 +111,10 @@ public class NacosBeanDefinitionRegistrar implements ImportBeanDefinitionRegistr
             if(logger.isWarnEnabled()){
                 logger.warn("----------------config nacos Server Address is empty------------------");
             }
-            return;
+            throw new IllegalArgumentException("Nacos Address is empty!");
         }
         if(logger.isInfoEnabled()){
-            logger.info("config nacos Server [ServerAddress:{},namespace:{}]", resolvedNacosServerAddress,namespace);
+            logger.info("Nacos Config Server [ServerAddress:{},namespace:{}]", resolvedNacosServerAddress,namespace);
         }
         if(this.nacosConfigService == null){
             try {
@@ -117,12 +129,10 @@ public class NacosBeanDefinitionRegistrar implements ImportBeanDefinitionRegistr
                 singletonBeanRegistry.registerSingleton("nacosConfigService",nacosConfigService);
 
             } catch (NacosException e) {
-               logger.error("Create nacos ConfigService Error",e);
+                logger.error("Create nacos ConfigService Error",e);
+                throw new RuntimeException(e);
             }
         }
-        RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(NacosValueBeanPostProcessor.class);
-        rootBeanDefinition.setRole(BeanDefinition.ROLE_APPLICATION);
-        registry.registerBeanDefinition(NacosValueBeanPostProcessor.class.getName(),rootBeanDefinition);
-    }
 
+    }
 }
