@@ -9,11 +9,11 @@
 
     <bean id="testBean" class="com.github.mxsm.bean.TestBean" init-method="init"/>
 
-    <!--<bean class="com.github.mxsm.processor.MyBeanPostProcessor" id="myBeanPostProcessor"/>-->
-    <bean class="com.github.mxsm.processor.MyInstantiationAwareBeanPostProcessor" id="myInstantiationAwareBeanPostProcessor"/>
+    <bean class="com.github.mxsm.processor.MyBeanPostProcessor" id="myBeanPostProcessor"/>
+    <!--<bean class="com.github.mxsm.processor.MyInstantiationAwareBeanPostProcessor" id="myInstantiationAwareBeanPostProcessor"/>
 
     <bean class="com.github.mxsm.processor.MyBeanFactoryPostProcessor" id="myBeanFactoryPostProcessor"/>
 
-    <bean class="com.github.mxsm.processor.MxsmValueBeanPostProcessor" id="mxsmValueBeanPostProcessor"/>
+    <bean class="com.github.mxsm.processor.MxsmValueBeanPostProcessor" id="mxsmValueBeanPostProcessor"/>-->
 
 </beans>
