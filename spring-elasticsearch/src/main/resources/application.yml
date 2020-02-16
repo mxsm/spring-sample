@@ -1,0 +1,9 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /es
+spring:
+  elasticsearch:
+    rest:
+      uris: http://106.53.84.197:9200
+      connection-timeout: 10

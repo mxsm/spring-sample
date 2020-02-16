@@ -17,6 +17,7 @@
         <module>mxsm-algorithm</module>
         <module>spring-mvc</module>
       <module>mxsm-mybatis</module>
+        <module>spring-elasticsearch</module>
     </modules>
     <packaging>pom</packaging>
 
