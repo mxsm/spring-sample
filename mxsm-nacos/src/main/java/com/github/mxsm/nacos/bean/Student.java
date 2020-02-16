@@ -1,6 +1,9 @@
 package com.github.mxsm.nacos.bean;
 
+import com.github.mxsm.nacos.annotation.EnableNacosConfig;
+import com.github.mxsm.nacos.annotation.NacosProperties;
 import com.github.mxsm.nacos.annotation.NacosValue;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Component;
  * description:
  */
 @Component
+@EnableNacosConfig(globalProperties = @NacosProperties(serverAddr = "127.0.0.1:8848", namespace = "1ef58b42-2e3c-4c11-9698-ce8e9c8e4e63"))
 public class Student {
 
     @NacosValue(dataId = "name",group = "mxsm",refresh = true)
