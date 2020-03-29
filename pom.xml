@@ -18,6 +18,7 @@
         <module>spring-mvc</module>
       <module>mxsm-mybatis</module>
         <module>spring-elasticsearch</module>
+      <module>mxsm-rocketmq</module>
     </modules>
     <packaging>pom</packaging>
 

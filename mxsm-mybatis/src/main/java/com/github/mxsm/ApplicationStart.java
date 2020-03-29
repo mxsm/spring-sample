@@ -3,6 +3,7 @@ package com.github.mxsm;
 import com.github.mxsm.entity.Roles;
 import com.github.mxsm.mapper.RoleMapper;
 import java.io.InputStream;
+import java.util.concurrent.locks.ReentrantLock;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
