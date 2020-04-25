@@ -19,6 +19,7 @@
       <module>mxsm-mybatis</module>
         <module>spring-elasticsearch</module>
       <module>mxsm-rocketmq</module>
+        <module>distributed-lock</module>
     </modules>
     <packaging>pom</packaging>
 
