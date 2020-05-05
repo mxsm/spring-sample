@@ -9,7 +9,7 @@ public class AnnotationMain {
     public static void main(String[] args) {
 
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext("com.github.mxsm");
-        System.out.println(applicationContext.getBean(MxsmBeanPostProcessor.class));
+        //System.out.println(applicationContext.getBean(MxsmBeanPostProcessor.class));
     }
 
 }

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author mxsm
  * @Date 2019/11/24 11:52 description:
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.github.mxsm")
 public class SpringBootStrap {
 
 }
