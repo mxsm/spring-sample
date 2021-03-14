@@ -2,7 +2,7 @@ package com.github.mxsm.bean;
 
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public class B {
 
     private A a;

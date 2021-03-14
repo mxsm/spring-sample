@@ -20,6 +20,7 @@
         <module>spring-elasticsearch</module>
       <module>mxsm-rocketmq</module>
         <module>distributed-lock</module>
+        <module>java-sample</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -7,8 +7,6 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.NoOp;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class AopCallBackTest {
 
     @Test
@@ -26,7 +24,7 @@ public class AopCallBackTest {
         proxy.method1("1");
         proxy.method2(1);
         proxy.method3(1);
-        System.out.println(proxy.toString());;
+        System.out.println(proxy.toString());
 
     }
 
