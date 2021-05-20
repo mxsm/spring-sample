@@ -1,16 +1,16 @@
 package com.github.mxsm.controller;
 
-import static jdk.nashorn.internal.objects.Global.println;
-
-import java.io.IOException;
+import com.github.mxsm.processor.Test;
 import java.io.PrintWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.PostConstruct;
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.catalina.Globals;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,12 +24,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/async")
 public class AsyncController {
 
+    @Autowired
+    private Test test;
+
+    @PostConstruct
+    public void init(){
+        test.test();
+    }
+
     private ExecutorService service = Executors.newFixedThreadPool(10);
 
     @GetMapping("/time")
     public void async(HttpServletRequest request, HttpServletResponse response){
 
         request.setAttribute(Globals.ASYNC_SUPPORTED_ATTR, true);
+
+        request.getSession(true);
         AsyncContext asyncContext = request.startAsync();
 
         service.execute(new Task(asyncContext));

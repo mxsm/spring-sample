@@ -1,6 +1,6 @@
 package com.github.mxsm.bean;
 
-import org.springframework.context.annotation.Lazy;
+import com.github.mxsm.processor.CustomEnable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * description:
  */
 @Component
-@Lazy
+@CustomEnable
 public class LazyBean {
 
     public LazyBean() {
