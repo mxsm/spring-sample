@@ -18,22 +18,26 @@ public class MQProducer {
         DefaultMQProducer producer = new
             DefaultMQProducer("please_rename_unique_group_name");
         // Specify name server addresses.
-        producer.setNamesrvAddr("192.168.31.26:9876");
+        producer.setNamesrvAddr("192.168.31.49:9876");
         //Launch the instance.
         producer.start();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 100; i++) {
             //Create a message instance, specifying topic, tag and message body.
+            String s = "TTTTT Hello RocketMQ " +
+                System.nanoTime();
             Message msg = new Message("TopicTest" /* Topic */,
                 "TagB" /* Tag */,
-                ("Hello RocketMQ " +
-                    System.nanoTime()).getBytes(RemotingHelper.DEFAULT_CHARSET) /* Message body */
+                s.getBytes(RemotingHelper.DEFAULT_CHARSET) /* Message body */
             );
+            msg.setDelayTimeLevel(1);
             //Call send message to deliver message to one of brokers.
             SendResult sendResult = producer.send(msg);
+            System.out.println("发送时间:"+System.currentTimeMillis());
             System.out.printf("%s%n", sendResult);
+            System.out.println(s);
+
         }
         //Shut down once the producer instance is not longer in use.
         producer.shutdown();
     }
-
 }
