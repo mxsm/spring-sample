@@ -21,6 +21,7 @@
       <module>mxsm-rocketmq</module>
         <module>distributed-lock</module>
         <module>java-sample</module>
+        <module>spring-proxy</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -33,7 +34,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit.version>4.13.1</junit.version>
-        <spring.boot.version>2.2.6.RELEASE</spring.boot.version>
+        <spring.boot.version>2.6.1</spring.boot.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         <cglib.version>3.2.12</cglib.version>
     </properties>
