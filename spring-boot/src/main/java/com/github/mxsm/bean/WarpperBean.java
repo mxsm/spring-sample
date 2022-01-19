@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
  * @Date 2019/8/1 0:19
  * description:
  */
-@Component
-@Lazy
+//@Component
+//@Lazy
 public class WarpperBean {
 
     @Autowired

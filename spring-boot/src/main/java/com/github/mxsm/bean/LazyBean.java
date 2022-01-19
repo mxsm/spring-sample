@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
  * @Date 2019/8/1 0:18
  * description:
  */
-@Component
-@CustomEnable
+//@Component
+//@CustomEnable
 public class LazyBean {
 
     public LazyBean() {

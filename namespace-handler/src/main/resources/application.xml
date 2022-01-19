@@ -10,16 +10,7 @@
         http://www.springframework.org/schema/context
         https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:property-placeholder location="application.properties"/>
+        <mxsm:mxsmBean class="com.github.mxsm.bean.MxsmBeanTest" name="test"/>
 
 
-   <!-- <mxsm:application name="test" />-->
-   <!-- <bean id="aaaa" class="java.lang.String"/>-->
-
-    <bean id="applicationBean" class="com.github.mxsm.bean.ApplicationBean" init-method="init"/>
-    <!--<bean id="user" class="com.github.mxsm.bean.User" init-method="start">
-        <property name="name" value="aaaa"></property>
-    </bean>-->
-
-    <bean id="beanPostProcessor" class="com.github.mxsm.process.MxsmPostProcessor2"/>
 </beans>

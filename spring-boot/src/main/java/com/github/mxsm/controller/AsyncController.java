@@ -12,7 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.catalina.Globals;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -21,50 +24,20 @@ import org.springframework.web.bind.annotation.RestController;
  * @Since
  */
 @RestController
-@RequestMapping("/async")
+@RequestMapping("/log")
 public class AsyncController {
 
     @Autowired
     private Test test;
 
-    @PostConstruct
-    public void init(){
-        test.test();
+    @PostMapping("/user")
+    public long currentTime1(@RequestParam(value = "name",required = false)String name,
+        @RequestBody User user){
+        test.addUser(user);
+        return System.currentTimeMillis();
     }
 
-    private ExecutorService service = Executors.newFixedThreadPool(10);
 
-    @GetMapping("/time")
-    public void async(HttpServletRequest request, HttpServletResponse response){
 
-        request.setAttribute(Globals.ASYNC_SUPPORTED_ATTR, true);
-
-        request.getSession(true);
-        AsyncContext asyncContext = request.startAsync();
-
-        service.execute(new Task(asyncContext));
-    }
-
-    class Task implements Runnable{
-
-        private AsyncContext asyncContext;
-
-        public Task(AsyncContext asyncContext) {
-            this.asyncContext = asyncContext;
-        }
-        @Override
-        public void run() {
-            try {
-                PrintWriter writer = this.asyncContext.getResponse().getWriter();
-                writer.println(System.currentTimeMillis());
-                TimeUnit.SECONDS.sleep(10);
-                writer.println(System.currentTimeMillis());
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                this.asyncContext.complete();
-            }
-        }
-    }
 
 }

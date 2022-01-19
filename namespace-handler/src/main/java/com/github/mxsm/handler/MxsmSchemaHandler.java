@@ -6,6 +6,6 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 public class MxsmSchemaHandler extends NamespaceHandlerSupport {
     @Override
     public void init() {
-        registerBeanDefinitionParser("application", new MxsmBeanDefinitionParser());
+        registerBeanDefinitionParser("mxsmBean", new MxsmBeanDefinitionParser());
     }
 }
