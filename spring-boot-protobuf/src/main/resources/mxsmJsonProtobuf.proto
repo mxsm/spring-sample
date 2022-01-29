@@ -1,0 +1,10 @@
+syntax = "proto3";
+package mxsm1;
+option java_package = "com.github.mxsm.springboot.protobuf";
+option java_outer_classname = "MessageDto";
+
+import "google/protobuf/any.proto";
+
+message MxsmDto {
+  google.protobuf.Any details = 1;
+}

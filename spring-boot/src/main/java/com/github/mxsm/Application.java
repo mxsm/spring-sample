@@ -3,6 +3,8 @@ package com.github.mxsm;
 import com.github.mxsm.log.EnableLog;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication
@@ -19,5 +21,7 @@ public class Application {
         System.out.println(System.getProperty("java.ext.dirs").replaceAll(";", "\n"));*/
 /*        ApplicationContext applicationContext = new AnnotationConfigApplicationContext("com.github.mxsm");
         System.out.println(1111);*/
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext("com.github.mxsm");
+        applicationContext.getBean()
     }
 }
