@@ -35,17 +35,4 @@ public class JsonProtobufController {
         return json;
     }
 
-    @RequestMapping("/studentjsonproto/{id}")
-    MessageDto jsonproto(@PathVariable Integer id) {
-
-        StudentJson json = new StudentJson();
-        json.setId(id);
-        json.setFirstName("maxsm");
-        json.setLastName("sdfsdfsdfsdfsdfsd");
-        json.setEmail("1224344552@163.com");
-        json.setPhoneNumber(new PhoneNumber("123456566666",PhoneType.MOBILE));
-        MessageDto.MxsmDto.newBuilder().setDetails(Any.pack(json))
-
-        return json;
-    }
 }
