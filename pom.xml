@@ -23,6 +23,7 @@
         <module>java-sample</module>
         <module>spring-proxy</module>
         <module>spring-boot-protobuf</module>
+        <module>spring-custom</module>
     </modules>
     <packaging>pom</packaging>
 

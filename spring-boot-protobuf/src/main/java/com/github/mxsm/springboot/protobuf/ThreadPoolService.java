@@ -40,4 +40,12 @@ public class ThreadPoolService {
         return true;
     }
 
+    public boolean addUser(StudentJson json){
+        if(json.getFirstName() == null || "".equals(json.getFirstName().trim())){
+            throw new IllegalArgumentException("名称不能为空");
+        }
+        //其他的校验逻辑
+        return true;
+    }
+
 }

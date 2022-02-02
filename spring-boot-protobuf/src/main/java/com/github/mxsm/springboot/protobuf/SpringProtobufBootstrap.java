@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2022/1/27 20:39
  * @Since 1.0.0
  */
-@SpringBootApplication
+@SpringBootApplication()
 public class SpringProtobufBootstrap {
 
     public static void main(String[] args) {
