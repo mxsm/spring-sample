@@ -2,6 +2,8 @@ package com.github.mxsm.springboot.protobuf;
 
 import com.github.mxsm.springboot.protobuf.ProtobufMessage.Student;
 import com.google.protobuf.Any;
+import javax.servlet.AsyncContext;
+import javax.servlet.ServletRequest;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,10 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class JsonProtobufController {
 
     @RequestMapping("/student/{id}")
-    Student protobuf(@PathVariable Integer id) {
+    Student protobuf(@PathVariable Integer id, ServletRequest request) {
+        AsyncContext asyncContext = request.startAsync();
+
         return Student.newBuilder().setId(id).setFirstName("maxsm").setLastName("sdfsdfsdfsdfsdfsdsdfsdfsdfsdfsdfsdfsdfsdf")
             .setEmail("1224sdfsfsdf344552@163.com").addPhone(Student.PhoneNumber.newBuilder().setNumber("12345sdfsdfsd6566666").setType(
                 Student.PhoneType.MOBILE).build()).build();
+
     }
 
 

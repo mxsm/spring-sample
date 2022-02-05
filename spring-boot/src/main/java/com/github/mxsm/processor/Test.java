@@ -1,7 +1,7 @@
 package com.github.mxsm.processor;
 
 import com.github.mxsm.controller.User;
-import com.github.mxsm.log.annotation.Log;
+import com.github.mxsm.log.annotation.MxsmLog;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,15 +16,12 @@ public class Test {
         System.out.println(1111);
     }
 
-    @Log(template = "用户${#user.name}信息：${@test.getName(#user)}")
+    @MxsmLog(template = "用户名称${#user.name}信息：${@test.getName(#user)}")
     public boolean addUser(User user){
-
         return  true;
     }
 
     public String getName(User user){
-
         return  user.getName();
     }
-
 }
