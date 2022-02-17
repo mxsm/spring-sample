@@ -47,6 +47,12 @@
       <version>5.0.0</version>
       <!--<scope>provided</scope>-->
     </dependency>
+
+    <dependency>
+      <groupId>io.etcd</groupId>
+      <artifactId>jetcd-core</artifactId>
+      <version>0.6.1</version>
+    </dependency>
   </dependencies>
 
   <build>
