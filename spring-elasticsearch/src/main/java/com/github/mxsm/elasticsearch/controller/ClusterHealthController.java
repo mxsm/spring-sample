@@ -28,8 +28,9 @@ public class ClusterHealthController {
         ClusterHealthRequest request = new ClusterHealthRequest();
         request.indices("twitter");
         request.timeout(TimeValue.timeValueSeconds(10));
-        ClusterHealthResponse response = template.getClient().cluster().health(request, RequestOptions.DEFAULT);
-        return response;
+        //ClusterHealthResponse response = template.getClient().cluster().health(request, RequestOptions.DEFAULT);
+        //return response;
+        return null;
     }
 
 }

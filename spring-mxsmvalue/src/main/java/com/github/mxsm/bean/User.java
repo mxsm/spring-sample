@@ -1,7 +1,6 @@
 package com.github.mxsm.bean;
 
 import com.github.mxsm.annotation.MxsmValue;
-import javax.validation.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 public class User {
 
     @MxsmValue("${test}")
-    @NotBlank
     private String name;
 
     public String getName() {

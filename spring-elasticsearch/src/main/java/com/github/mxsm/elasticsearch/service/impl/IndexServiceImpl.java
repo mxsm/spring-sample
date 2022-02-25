@@ -14,32 +14,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class IndexServiceImpl implements IndexService {
 
-    @Autowired
-    private ElasticsearchRestTemplate template;
-
 
     @Override
     public boolean createIndex(String indexName) {
-
-        boolean indexExists = indexExists(indexName);
-        if (indexExists) {
-            return false;
-        }
-        return template.createIndex(indexName);
+        return false;
     }
 
     @Override
     public boolean deleteIndex(String indexName) {
-
-        boolean indexExists = indexExists(indexName);
-        if (indexExists) {
-            return false;
-        }
-        return template.deleteIndex(indexName);
+        return false;
     }
 
     @Override
     public boolean indexExists(String indexName) {
-        return template.indexExists(indexName);
+        return false;
     }
 }
