@@ -1,5 +1,6 @@
 package com.github.mxsm.netty.channelhandler;
 
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandler;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -10,6 +11,7 @@ import io.netty.channel.ChannelPipeline;
  * @date 2022/3/13 10:37
  * @Since 1.0.0
  */
+@Sharable
 public class TimeServerBossInHandler extends ChannelInboundHandlerAdapter {
 
     @Override

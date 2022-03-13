@@ -7,6 +7,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
@@ -23,11 +24,11 @@ public class DiscardServer {
     }
 
     public void run() throws Exception {
-        EventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1); // (1)
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap(); // (2)
-            b.childHandler(new ChannelInitializer<SocketChannel>(){
+            b.handler(new ChannelInitializer<ServerSocketChannel>(){
 
                 /**
                  * This method will be called once the {@link Channel} was registered. After the
@@ -41,7 +42,7 @@ public class DiscardServer {
                  *                   Channel}.
                  */
                 @Override
-                protected void initChannel(SocketChannel ch) throws Exception {
+                protected void initChannel(ServerSocketChannel ch) throws Exception {
                     ch.pipeline().addLast(new TimeServerBossOutHandler());
                     ch.pipeline().addLast(new TimeServerBossInHandler());
                 }
