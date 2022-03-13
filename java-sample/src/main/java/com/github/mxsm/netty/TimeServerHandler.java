@@ -1,10 +1,12 @@
 package com.github.mxsm.netty;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -13,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Since
  */
 //@Sharable
-public class TimeServerHandler extends ChannelInboundHandlerAdapter {
+public class TimeServerHandler extends SimpleChannelInboundHandler<String> {
 
     private AtomicInteger integer = new AtomicInteger();
 
@@ -24,13 +26,26 @@ public class TimeServerHandler extends ChannelInboundHandlerAdapter {
         time.writeInt((int) (System.currentTimeMillis() / 1000L + 2208988800L));
 
         final ChannelFuture f = ctx.writeAndFlush(time); // (3)
-        f.addListener(new ChannelFutureListener() {
+/*        f.addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) {
                 assert f == future;
                 ctx.close();
             }
-        }); // (4)
+        }); */// (4)
+    }
+
+    /**
+     * Is called for each message of type {@link I}.
+     *
+     * @param ctx the {@link ChannelHandlerContext} which this {@link SimpleChannelInboundHandler} belongs to
+     * @param msg the message to handle
+     * @throws Exception is thrown if an error occurred
+     */
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+        System.out.println(msg);
+        ctx.writeAndFlush(msg);
     }
 
     @Override

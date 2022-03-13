@@ -1,6 +1,10 @@
-package com.github.mxsm.netty;
+package com.github.mxsm.netty.channelhandler;
 
+import com.github.mxsm.netty.TimeClientHandler;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -8,12 +12,12 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import java.util.concurrent.TimeUnit;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author mxsm
- * @Date 2021/6/22
- * @Since
+ * @date 2022/3/13 13:53
+ * @Since 1.0.0
  */
 public class TimeClient {
     public static void main(String[] args) throws Exception {
@@ -29,14 +33,18 @@ public class TimeClient {
             b.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 public void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new TimeClientHandler());
+                    ch.pipeline().addLast(new TimeClientOutHandler());
+                    ch.pipeline().addLast(new TimeClientInHandler());
                 }
             });
 
             // Start the client.
             ChannelFuture f = b.connect(host, port).sync(); // (5)
-            f.channel().writeAndFlush("11111");
+            ByteBuf byteBuf = Unpooled.buffer();
             // Wait until the connection is closed.
+            byteBuf.writeBytes("1111".getBytes(StandardCharsets.UTF_8));
+            f.channel().writeAndFlush(byteBuf);
+
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();

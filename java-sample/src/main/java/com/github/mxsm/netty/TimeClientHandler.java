@@ -1,6 +1,7 @@
 package com.github.mxsm.netty;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import java.util.Date;
@@ -10,8 +11,7 @@ import java.util.Date;
  * @Date 2021/6/22
  * @Since
  */
-public class TimeClientHandler extends ChannelInboundHandlerAdapter{
-
+public class TimeClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf m = (ByteBuf) msg; // (1)
@@ -22,6 +22,7 @@ public class TimeClientHandler extends ChannelInboundHandlerAdapter{
         } finally {
             m.release();
         }
+        System.out.println(msg);
     }
 
     @Override
@@ -29,5 +30,4 @@ public class TimeClientHandler extends ChannelInboundHandlerAdapter{
         cause.printStackTrace();
         ctx.close();
     }
-
 }
